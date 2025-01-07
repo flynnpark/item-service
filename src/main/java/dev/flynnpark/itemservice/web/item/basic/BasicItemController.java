@@ -2,8 +2,11 @@ package dev.flynnpark.itemservice.web.item.basic;
 
 import dev.flynnpark.itemservice.domain.item.Item;
 import dev.flynnpark.itemservice.domain.item.ItemRepository;
+
 import jakarta.annotation.PostConstruct;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +39,11 @@ public class BasicItemController {
     }
 
     @PostMapping("/add")
-    public String addItemV1(@RequestParam String itemName, @RequestParam int price, @RequestParam Integer quantity, Model model) {
+    public String addItemV1(
+            @RequestParam String itemName,
+            @RequestParam int price,
+            @RequestParam Integer quantity,
+            Model model) {
         Item item = new Item();
         item.setItemName(itemName);
         item.setPrice(price);
@@ -50,18 +57,23 @@ public class BasicItemController {
     }
 
     @PostMapping("/add")
-    public String addItemV2(@ModelAttribute("item") Item item, Model model){
+    public String addItemV2(@ModelAttribute("item") Item item, Model model) {
         itemRepository.save(item);
 
         return "basic/item";
     }
-
 
     @PostMapping("/add")
     public String addItemV3(@ModelAttribute("item") Item item) {
         itemRepository.save(item);
 
         return "basic/item";
+    }
+
+    @PostMapping("/add")
+    public String addItemV5(Item item) {
+        itemRepository.save(item);
+        return "redirect:/basic/items/" + item.getId();
     }
 
     @GetMapping("/{itemId}/edit")
@@ -72,10 +84,10 @@ public class BasicItemController {
     }
 
     @PostMapping("/{itemId}/edit")
-    public String edit(@PathVariable("itemId") Long itemId, @ModelAttribute("item") Item item){
+    public String edit(@PathVariable("itemId") Long itemId, @ModelAttribute("item") Item item) {
         itemRepository.update(itemId, item);
         return "redirect:/basic/items/{itemId}";
-}
+    }
 
     @PostConstruct
     public void init() {
